@@ -1,0 +1,5 @@
+            /* The height and width of the div will become the dimensions of the map! */
+            #map {
+                height: 700px;
+                width: 1400px;
+              }
