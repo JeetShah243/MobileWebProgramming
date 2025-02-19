@@ -1,5 +1,5 @@
         
-let map;
+let map, infoWindow, userMarker;
 function initMap()
 {
   map = new google.maps.Map(document.getElementById("map"), 
@@ -9,6 +9,7 @@ function initMap()
   });
   getMarker('marker');
 }
+infoWindow = new google.maps.InfoWindow();
 const locations = [
     {name:"Dark Fox TCG", lat: 43.23749, lng: -79.88335, type:'TradingCard' },
     {name:"Gamestop", lat: 43.22248, lng: -79.86138, type:'VideoGame' },
@@ -23,7 +24,32 @@ const locations = [
     {name:"456 Sports Cards and Memorabilia", lat: 43.26288, lng: -79.987425, type:'TradingCard' }
 ];
 const markers = [];
-function getLocation(){}
+function getLocation(){
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+            (position) => {
+                let userPos = {
+                    lat: position.coords.latitude,
+                    lng: position.coords.longitude,
+                };
+
+                if (userMarker) userMarker.setMap(null);
+
+                userMarker = new google.maps.Marker({
+                    position: userPos,
+                    map: map,
+                    icon: "./images/blue-dot.png",
+                    title: "Your Location",
+                });
+
+                map.setCenter(userPos);
+            },
+            () => alert("Geolocation failed.")
+        );
+    } else {
+        alert("Geolocation is not supported by your browser.");
+    }
+}
 function getMarker(option){
     clearMarkers();
     markers.length = 0;
