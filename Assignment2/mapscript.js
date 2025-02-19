@@ -143,8 +143,12 @@ function TempMarker(latLng) {
     if (tMarker) {
       tMarker.setMap(null);
     }
+    const redFlagImg = document.createElement("img");
+    redFlagImg.src =
+    "./images/red-flag.png";
     tMarker = new google.maps.Marker({
       position: latLng,
+      content: redFlagImg,
       map: map,
       title: "Temporary Marker"
     });
@@ -152,8 +156,55 @@ function TempMarker(latLng) {
     document.getElementById("lat").value = latLng.lat();
     document.getElementById("lng").value = latLng.lng();
     document.getElementById("markerForm").style.display = "block";
-  }
-
+}
+function saveMarker() {
+    const name = document.getElementById("name").value;
+    const address = document.getElementById("address").value;
+    const phone = document.getElementById("phone").value;
+    const website = document.getElementById("website").value;
+    const type = document.getElementById("type").value;
+    const lat = parseFloat(document.getElementById("lat").value);
+    const lng = parseFloat(document.getElementById("lng").value);
+  
+    const redFlagImg = document.createElement("img");
+    redFlagImg.src =
+    "./images/red-flag.png";
+    const newMarker = new google.maps.Marker({
+      position: { lat: lat, lng: lng },
+      content: redFlagImg,
+      map: map,
+      title: name
+    });
+  
+    const contentString = `
+      <div id="content">
+        <div id="siteNotice"></div>
+        <h1 id="firstHeading" class="firstHeading">${name}</h1>
+        <div id="bodyContent">
+          <p><b>Type:</b> ${type}</p>
+          <p><b>Address:</b> ${address}</p>
+          <p><b>Phone:</b> ${phone}</p>
+          <p><b>Website:</b> <a href="${website}">${website}</a></p>
+        </div>
+      </div>`;
+  
+    const infoWindow = new google.maps.InfoWindow({
+      content: contentString,
+      ariaLabel: name,
+    });
+  
+    newMarker.addListener("click", () => {
+      infoWindow.open({
+        anchor: newMarker,
+        map,
+      });
+    });
+  
+    markers.push(newMarker);
+    document.getElementById("markerForm").style.display = "none";
+    tMarker.setMap(null);
+    tMarker = null;
+}
 function clearMarkers(){
     for (let i = 0; i < markers.length; i++)
     {
