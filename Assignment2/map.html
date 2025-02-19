@@ -17,7 +17,7 @@
       
 
       <div id="map"></div>
-      <div id="markerForm">
+      <div id="markerForm" style="display:none;">
         <form id="markerForm">
           <label for="name">Name:</label><br>
           <input type="text" id="name" name="name" required><br>
@@ -38,7 +38,7 @@
           <input type="hidden" id="lng" name="lng"><br>
           <button type="button" onclick="saveMarker()">Save Marker</button>
         </form>
-      </div>>
+      </div>
 
       <script async
         src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDyrdplB4ORJ9AB3qD-CceP9OLI0u00UU4&loading=async&callback=initMap&libraries=marker">

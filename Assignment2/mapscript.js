@@ -155,7 +155,6 @@ function TempMarker(latLng) {
   
     document.getElementById("lat").value = latLng.lat();
     document.getElementById("lng").value = latLng.lng();
-    document.getElementById("markerForm").style.display = "block";
 }
 function addMarker() {
     if (!tMarker) {
