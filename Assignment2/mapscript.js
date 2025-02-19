@@ -24,7 +24,7 @@ const locations = [
 ];
 function getLocation(){}
 function getMarker(option){
-    clearMarkers();
+    //clearMarkers();
     let type = option;
     for (let i = 0; i < locations.length; i++)
     {
