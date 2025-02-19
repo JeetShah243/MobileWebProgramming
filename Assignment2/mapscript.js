@@ -1,8 +1,15 @@
-        
+ /**
+  * StAuth10244:
+  * I Jeet Shah, 000922954 certify that this material is my original work. 
+  * No other person's work has been used without due acknowledgement. 
+  * I have not made my work available to anyone else.
+  */       
+
 let map, userMarker, directionsService, directionsRenderer;
 let userPos = [];
 let tMarker;
 
+//initialize the map
 function initMap()
 {
   map = new google.maps.Map(document.getElementById("map"), 
@@ -10,15 +17,18 @@ function initMap()
      zoom: 12,
      mapId: "MAP_ID_GOES_HERE"
   });
+  // for directions for user location to marker
   directionsService = new google.maps.DirectionsService();
   directionsRenderer = new google.maps.DirectionsRenderer();
   directionsRenderer.setMap(map);
-  getMarker("marker");
+  getMarker("marker");//loading all markers
 
+  //add event listener for the user to add a marker
   map.addListener("dblclick", (e) => {
     TempMarker(e.latLng);
   });
 }
+//locations array 
 const locations = [
     {name:"Dark Fox TCG", lat: 43.23113, lng: -79.88151, type:'TradingCard', address: "730 Upper James St, Hamilton, ON L9C 2Z9", phone: '905-385-1338', website: "http://darkfoxtcg.com" },
     {name:"Gamestop", lat: 43.22257, lng: -79.86230, type:'VideoGame', address: "999 Upper Wentworth St, Hamilton, ON L9A 4X5", phone: '905-318-6089', website: "https://www.gamestop.ca/" },
@@ -33,6 +43,8 @@ const locations = [
     {name:"456 Sports Cards and Memorabilia", lat: 43.26288, lng: -79.987425, type:'TradingCard', address: "164 King St W, Hamilton, ON L8P 1A5", phone: '289-389-4477', website: "" }
 ];
 const markers = [];
+
+//get user location
 function getLocation(){
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
@@ -41,7 +53,8 @@ function getLocation(){
                     lat: position.coords.latitude,
                     lng: position.coords.longitude,
                 };
-
+                
+                //user location marker
                 if (userMarker) userMarker.setMap(null);
                 const beachFlagImg = document.createElement("img");
                 beachFlagImg.src =
@@ -61,14 +74,16 @@ function getLocation(){
         alert("Geolocation is not supported by your browser.");
     }
 }
+
+//load all markers and also filter by type
 function getMarker(option){
-    clearMarkers();
-    //markers.length = 0;
-    let type = option;
+    clearMarkers();//clear all markers
+    let type = option;//get the type of marker to display
     for (let i = 0; i < locations.length; i++)
     {
+        //content for the info window
         const contentString =`
-        <div id="content">
+        <div id="content">  
             <div id="siteNotice"></div>
             <h2 id="firstHeading" class="firstHeading">${locations[i].name}</h2>
             <div id="bodyContent">
@@ -79,6 +94,7 @@ function getMarker(option){
                 <button onclick="showRoute(${i})">Get Directions</button>
             </div>
         </div>`;
+        //load all markers
         if (type == "marker"){
             const marker = new google.maps.Marker({
                 position: { lat: locations[i].lat, lng: locations[i].lng },
@@ -98,7 +114,7 @@ function getMarker(option){
             markers.push(marker);
 
 
-        }else {
+        }else {//filter by type
             if (type == locations[i].type){
                 const marker = new google.maps.Marker({
                     position: { lat: locations[i].lat, lng: locations[i].lng },
@@ -120,14 +136,16 @@ function getMarker(option){
         }
     }
 }
+//show route from user location to marker
 function showRoute(i) {
     if (!userPos.lat || !userPos.lng) {
         alert("Please find your location first.");
         return;
       }
+    //start and end location
     const start = userPos;
     const end = {lat:locations[i].lat, lng:locations[i].lng};
-  
+  //get the route
     directionsService
       .route({
         origin: start,
@@ -139,6 +157,8 @@ function showRoute(i) {
       })
       .catch((e) => window.alert("Directions request failed due to " + e));
 }
+
+//add temporary marker at user clicked position until data is entered
 function TempMarker(latLng) {
     if (tMarker) {
       tMarker.setMap(null);
@@ -152,10 +172,12 @@ function TempMarker(latLng) {
       map: map,
       title: "Temporary Marker"
     });
-  
+  //marker lat and lng values
     document.getElementById("lat").value = latLng.lat();
     document.getElementById("lng").value = latLng.lng();
 }
+
+//add marker bug solved such that it does not add marker without data
 function addMarker() {
     if (!tMarker) {
       alert("Please double-click on the map to place a temporary marker first.");
@@ -163,6 +185,8 @@ function addMarker() {
     }
     document.getElementById("markerForm").style.display = "block";
   }
+
+  //save marker with data
 function saveMarker() {
     const name = document.getElementById("name").value;
     const address = document.getElementById("address").value;
@@ -172,6 +196,7 @@ function saveMarker() {
     const lat = parseFloat(document.getElementById("lat").value);
     const lng = parseFloat(document.getElementById("lng").value);
   
+    //add marker to the map
     const redFlagImg = document.createElement("img");
     redFlagImg.src =
     "./images/red-flag.png";
@@ -181,7 +206,7 @@ function saveMarker() {
       map: map,
       title: name
     });
-  
+  //content for the info window
     const contentString = `
       <div id="content">
         <div id="siteNotice"></div>
@@ -211,6 +236,8 @@ function saveMarker() {
     tMarker.setMap(null);
     tMarker = null;
 }
+
+//clear all markers
 function clearMarkers(){
     for (let i = 0; i < markers.length; i++)
     {

@@ -1,3 +1,8 @@
+<!--StAuth10244:
+ I Jeet Shah, 000922954 certify that this material is my original work. 
+ No other person's work has been used without due acknowledgement. 
+ I have not made my work available to anyone else.-->
+
 <!DOCTYPE html>
 <html>
     <head>
@@ -7,16 +12,17 @@
     <link rel="stylesheet" href="mapstyle.css" >
     <body>
       <h1>Game shops in Hamilton</h1>
-      <button onclick="getLocation()">Find my location</button>
-      <button onclick="getMarker('GameShop')">game shops</button>
-      <button onclick="getMarker('BoardGame')">Cafes and Restaurants</button>
-      <button onclick="getMarker('VideoGame')">video game shops</button>
-      <button onclick="getMarker('TradingCard')">Trading card store</button>
-      <button onclick="clearMarkers()">Clear markers</button>
-      <button onclick="addMarker()">Add Marker</button>
+      <button onclick="getLocation()">Find my location</button><!--find user location-->
+      <button onclick="getMarker('GameShop')">game shops</button><!--only show markers with type gameshop-->
+      <button onclick="getMarker('BoardGame')">Cafes and Restaurants</button><!--only show markers with type boardgame-->
+      <button onclick="getMarker('VideoGame')">video game shops</button><!--only show markers with type videogame-->
+      <button onclick="getMarker('TradingCard')">Trading card store</button><!--only show markers with type tradingcard-->
+      <button onclick="clearMarkers()">Clear markers</button><!--clear all markers from the map-->
+      <button onclick="addMarker()">Add Marker</button><!--add the marker user has clicked as a temporary marker-->
       
 
       <div id="map"></div>
+      <!--Form for adding new marker-->
       <div id="markerForm" style="display:none;">
         <form id="markerForm">
           <label for="name">Name:</label><br>
@@ -26,8 +32,9 @@
           <label for="phone">Phone:</label>
           <input type="text" id="phone" name="phone" required><br>
           <label for="website">Website:</label>
-          <input type="text" id="website" name="website"><br>
+          <input type="text" id="website" name="website"><br><!--optional field-->
           <label for="type">Type:</label><br>
+          <!--Select one from these options-->
           <select id="type" name="type" required>
             <option value="GameShop">Game Shop</option>
             <option value="BoardGame">Board Game</option>
@@ -36,10 +43,11 @@
           </select><br>
           <input type="hidden" id="lat" name="lat"><br>
           <input type="hidden" id="lng" name="lng"><br>
+          <!--finalize marker info and add it to the map as an official marker-->
           <button type="button" onclick="saveMarker()">Save Marker</button>
         </form>
       </div>
-
+      <!--GOOGLE MAPS API-->
       <script async
         src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDyrdplB4ORJ9AB3qD-CceP9OLI0u00UU4&loading=async&callback=initMap&libraries=marker">
       </script>
