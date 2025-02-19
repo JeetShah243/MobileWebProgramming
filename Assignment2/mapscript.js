@@ -1,5 +1,6 @@
         
-let map, infoWindow, userMarker;
+let map, userMarker, directionsService, directionsRenderer;
+let userPos = [];
 function initMap()
 {
   map = new google.maps.Map(document.getElementById("map"), 
@@ -7,6 +8,9 @@ function initMap()
      zoom: 12,
      mapId: "MAP_ID_GOES_HERE"
   });
+  directionsService = new google.maps.DirectionsService();
+  directionsRenderer = new google.maps.DirectionsRenderer();
+  directionsRenderer.setMap(map);
   getMarker("marker");
 }
 const locations = [
@@ -27,17 +31,19 @@ function getLocation(){
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
             (position) => {
-                let userPos = {
+                userPos = {
                     lat: position.coords.latitude,
                     lng: position.coords.longitude,
                 };
 
                 if (userMarker) userMarker.setMap(null);
-
+                const beachFlagImg = document.createElement("img");
+                beachFlagImg.src =
+                "./images/blue-dot.png";
                 userMarker = new google.maps.marker.AdvancedMarkerElement({
                     position: userPos,
                     map: map,
-                    icon: "./images/blue-dot.png",
+                    content: beachFlagImg,
                     title: "Your Location",
                 });
 
@@ -51,19 +57,20 @@ function getLocation(){
 }
 function getMarker(option){
     clearMarkers();
-    markers.length = 0;
+    //markers.length = 0;
     let type = option;
     for (let i = 0; i < locations.length; i++)
     {
         const contentString =`
         <div id="content">
             <div id="siteNotice"></div>
-            <h1 id="firstHeading" class="firstHeading">${locations[i].name}</h1>
+            <h2 id="firstHeading" class="firstHeading">${locations[i].name}</h2>
             <div id="bodyContent">
                 <p><b>Type:</b> ${locations[i].type}</p>
                 <p><b>Address:</b> ${locations[i].address}</p>
                 <p><b>Phone:</b> ${locations[i].phone}</p>
                 <p><b>Website:</b> <a href="${locations[i].website}">${locations[i].website}</a></p>
+                <button onclick="showRoute(${i})">Get Directions</button>
             </div>
         </div>`;
         if (type == "marker"){
@@ -73,14 +80,13 @@ function getMarker(option){
                 title: locations[i].name,
                 
             });
-            infoWindow = new google.maps.InfoWindow({
+            let infoWindow = new google.maps.InfoWindow({
                 content: contentString,
                 ariaLabel: locations[i].name,
             });
             marker.addListener("click", () => {
                 infoWindow.open({
-                  anchor: marker,
-                  map,
+                  anchor: marker
                 });
             });
             markers.push(marker);
@@ -94,14 +100,13 @@ function getMarker(option){
                     title: locations[i].name,
                     
                 });
-                infoWindow = new google.maps.InfoWindow({
+                let infoWindow = new google.maps.InfoWindow({
                 content: contentString,
                 ariaLabel: locations[i].name,
             });
             marker.addListener("click", () => {
                 infoWindow.open({
-                  anchor: marker,
-                  map,
+                  anchor: marker
                 });
             });
                 markers.push(marker);
@@ -109,6 +114,25 @@ function getMarker(option){
         }
     }
 }
+function showRoute(i) {
+    if (!userPos.lat || !userPos.lng) {
+        alert("Please find your location first.");
+        return;
+      }
+    const start = userPos;
+    const end = {lat:locations[i].lat, lng:locations[i].lng};
+  
+    directionsService
+      .route({
+        origin: start,
+        destination: end,
+        travelMode: google.maps.TravelMode.DRIVING,
+      })
+      .then((response) => {
+        directionsRenderer.setDirections(response);
+      })
+      .catch((e) => window.alert("Directions request failed due to " + e));
+  }
 function clearMarkers(){
     for (let i = 0; i < markers.length; i++)
     {
