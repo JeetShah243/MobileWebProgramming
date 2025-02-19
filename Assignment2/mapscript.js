@@ -22,3 +22,4 @@ const locations = [
     {name:"456 Sports Cards and Memorabilia", lat: 43.26288, lng: -79.987425, type:"TradingCard" }
 ];
 function getLocation(){}
+function getMarker(){}
