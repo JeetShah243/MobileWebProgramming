@@ -157,6 +157,13 @@ function TempMarker(latLng) {
     document.getElementById("lng").value = latLng.lng();
     document.getElementById("markerForm").style.display = "block";
 }
+function addMarker() {
+    if (!tMarker) {
+      alert("Please double-click on the map to place a temporary marker first.");
+      return;
+    }
+    document.getElementById("markerForm").style.display = "block";
+  }
 function saveMarker() {
     const name = document.getElementById("name").value;
     const address = document.getElementById("address").value;
