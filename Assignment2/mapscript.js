@@ -7,6 +7,7 @@ function initMap()
      zoom: 12,
      mapId: "MAP_ID_GOES_HERE"
   });
+  getMarker("marker");
 }
 const locations = [
     {name:"Dark Fox TCG", lat: 43.23749, lng: -79.88335, type:"TradingCard" },
@@ -23,6 +24,7 @@ const locations = [
 ];
 function getLocation(){}
 function getMarker(option){
+    clearMarkers();
     let type = option;
     for (let i = 0; i < locations.length; i++)
     {
@@ -43,5 +45,11 @@ function getMarker(option){
                 });
             }
         }
+    }
+}
+function clearMarkers(){
+    for (let i = 0; i < locations.length; i++)
+    {
+        locations[i].setMap(null);
     }
 }
