@@ -1,6 +1,8 @@
         
 let map, userMarker, directionsService, directionsRenderer;
 let userPos = [];
+let tMarker;
+
 function initMap()
 {
   map = new google.maps.Map(document.getElementById("map"), 
@@ -12,6 +14,10 @@ function initMap()
   directionsRenderer = new google.maps.DirectionsRenderer();
   directionsRenderer.setMap(map);
   getMarker("marker");
+
+  map.addListener("dblclick", (e) => {
+    TempMarker(e.latLng);
+  });
 }
 const locations = [
     {name:"Dark Fox TCG", lat: 43.23113, lng: -79.88151, type:'TradingCard', address: "730 Upper James St, Hamilton, ON L9C 2Z9", phone: '905-385-1338', website: "http://darkfoxtcg.com" },
@@ -132,7 +138,22 @@ function showRoute(i) {
         directionsRenderer.setDirections(response);
       })
       .catch((e) => window.alert("Directions request failed due to " + e));
+}
+function TempMarker(latLng) {
+    if (tMarker) {
+      tMarker.setMap(null);
+    }
+    tMarker = new google.maps.Marker({
+      position: latLng,
+      map: map,
+      title: "Temporary Marker"
+    });
+  
+    document.getElementById("lat").value = latLng.lat();
+    document.getElementById("lng").value = latLng.lng();
+    document.getElementById("markerForm").style.display = "block";
   }
+
 function clearMarkers(){
     for (let i = 0; i < markers.length; i++)
     {
