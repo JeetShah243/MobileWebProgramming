@@ -28,7 +28,12 @@
           <label for="website">Website:</label>
           <input type="text" id="website" name="website"><br>
           <label for="type">Type:</label><br>
-          <input type="text" id="type" name="type"><br>
+          <select id="type" name="type" required>
+            <option value="GameShop">Game Shop</option>
+            <option value="BoardGame">Board Game</option>
+            <option value="VideoGame">Video Game</option>
+            <option value="TradingCard">Trading Card</option>
+          </select><br>
           <label for="lat">Latitude:</label><br>
           <input type="text" id="lat" name="lat"><br>
           <label for="lng">Longitude:</label><br>
