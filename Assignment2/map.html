@@ -17,8 +17,26 @@
       
 
       <div id="map"></div>
+      <div id="markerForm">
+        <form id="markerForm">
+          <label for="name">Name:</label><br>
+          <input type="text" id="name" name="name"><br>
+          <label for="address">Address:</label><br>
+          <input type="text" id="address" name="address"><br>
+          <label for="phone">Phone:</label>
+          <input type="text" id="phone" name="phone"><br>
+          <label for="website">Website:</label>
+          <input type="text" id="website" name="website"><br>
+          <label for="type">Type:</label><br>
+          <input type="text" id="type" name="type"><br>
+          <label for="lat">Latitude:</label><br>
+          <input type="text" id="lat" name="lat"><br>
+          <label for="lng">Longitude:</label><br>
+          <input type="text" id="lng" name="lng"><br>
+          <input type="button" value="Submit" onclick="submitMarker()">
+        </form>
+      </div>>
 
-      
       <script async
         src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDyrdplB4ORJ9AB3qD-CceP9OLI0u00UU4&loading=async&callback=initMap&libraries=marker">
       </script>
