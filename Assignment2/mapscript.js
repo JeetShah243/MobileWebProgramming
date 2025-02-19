@@ -67,11 +67,11 @@ function getMarker(option){
             </div>
         </div>`;
         if (type == "marker"){
-            const marker = new google.maps.marker.AdvancedMarkerElement({
+            const marker = new google.maps.Marker({
                 position: { lat: locations[i].lat, lng: locations[i].lng },
                 map: map,
                 title: locations[i].name,
-                category: locations[i].type
+                
             });
             infoWindow = new google.maps.InfoWindow({
                 content: contentString,
@@ -88,11 +88,11 @@ function getMarker(option){
 
         }else {
             if (type == locations[i].type){
-                const marker = new google.maps.marker.AdvancedMarkerElement({
+                const marker = new google.maps.Marker({
                     position: { lat: locations[i].lat, lng: locations[i].lng },
                     map: map,
                     title: locations[i].name,
-                    category: locations[i].type
+                    
                 });
                 infoWindow = new google.maps.InfoWindow({
                 content: contentString,
