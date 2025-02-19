@@ -7,7 +7,7 @@ function initMap()
      zoom: 12,
      mapId: "MAP_ID_GOES_HERE"
   });
-  getMarker('marker');
+  getMarker("marker");
 }
 const locations = [
     {name:"Dark Fox TCG", lat: 43.23113, lng: -79.88151, type:'TradingCard', address: "730 Upper James St, Hamilton, ON L9C 2Z9", phone: '905-385-1338', website: "http://darkfoxtcg.com" },
@@ -66,7 +66,7 @@ function getMarker(option){
                 <p><b>Website:</b> <a href="${locations[i].website}">${locations[i].website}</a></p>
             </div>
         </div>`;
-        if (type == 'marker'){
+        if (type == "marker"){
             const marker = new google.maps.marker.AdvancedMarkerElement({
                 position: { lat: locations[i].lat, lng: locations[i].lng },
                 map: map,
@@ -95,15 +95,15 @@ function getMarker(option){
                     category: locations[i].type
                 });
                 infoWindow = new google.maps.InfoWindow({
-                    content: contentString,
-                    ariaLabel: locations[i].name,
+                content: contentString,
+                ariaLabel: locations[i].name,
+            });
+            marker.addListener("click", () => {
+                infoWindow.open({
+                  anchor: marker,
+                  map,
                 });
-                marker.addListener("click", () => {
-                    infoWindow.open({
-                      anchor: marker,
-                      map,
-                    });
-                });
+            });
                 markers.push(marker);
             }
         }
