@@ -22,4 +22,14 @@ const locations = [
     {name:"456 Sports Cards and Memorabilia", lat: 43.26288, lng: -79.987425, type:"TradingCard" }
 ];
 function getLocation(){}
-function getMarker(){}
+function getMarker(){
+    for (let i = 0; i < locations.length; i++)
+    {
+        const marker = new google.maps.Marker({
+            position: { lat: locations[i].lat, lng: locations[i].lng },
+            map: map,
+            title: locations[i].name,
+            category: locations[i].type
+        });
+    }
+}
