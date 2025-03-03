@@ -28,6 +28,19 @@
             return deck;
         }
         // component to display a single card
+        function Card(props) {
+            return (
+                <div className="card">
+                    <div className="card-inner">
+                        <div className="card-front">
+                            <span className="rank">{props.rank}</span>
+                            <span className="suit">{props.suit}</span>
+                        </div>
+                        <div className="card-back"></div>
+                    </div>
+                </div>
+            );
+        }
         // card onclick event to select and swap cards
         // deal 5 or 7 cards
         // reset cards
