@@ -24,7 +24,7 @@
             let deck = [];
             for (let suit of suits) {
                 for (let rank of ranks) {
-                    deck.push({suit: suit, rank: rank});
+                    deck.push({suit: suit, rank: rank, type: null});
                 }
             }
             return deck;
@@ -50,8 +50,19 @@
         //     );
         // }
         // card onclick event to select and swap cards
-        function handleClick(e) {
-            console.log(e.target);
+        function handleClick(props) {
+            if (props.type === 'selected') {//deselect card
+                props.type = null;
+            }else{
+                for (let i = 0; i < userDeck.length; i++) {
+                    if (userDeck[i].type === 'selected') {//swap cards
+                        let temp = userDeck[i];
+                        userDeck[i] = props;
+                        props = temp;
+                        console.log(userDeck[i]);
+                    }else props.type = 'selected';//select card
+                }
+            }
         }
         //randomized card 
         function randomCard() {
@@ -85,10 +96,12 @@
         }
         // toss card
         function tossCard() {
-
-            let card = userDeck.pop();
-            tossCard.push(card);
-            return card;
+            for (let i = 0; i < userDeck.length; i++) {
+                if (userDeck[i].type === 'selected') {//swap cards
+                    tossCard.push(userDeck[i]);
+                    userDeck.splice(i, 1);
+                }
+            }
         }
         // shuffle cards
         function shuffleDeck() {
@@ -102,6 +115,14 @@
             return deck;
         }
         // wildcard 
+        function wildCard() {
+            let randomSuit = suits[Math.floor(Math.random() * suits.length)];
+            let randomRank = ranks[Math.floor(Math.random() * ranks.length)];
+            let card = {suit: randomSuit, rank: randomRank, type: 'wild'};
+            userDeck.push(card);
+            return card(card);
+        }
+
 
         const container = document.getElementById('root');
         const root = ReactDOM.createRoot(container);
