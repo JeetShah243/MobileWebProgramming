@@ -33,10 +33,8 @@
         function Card(props) {
             return (
                 <div className="card" onClick={handleClick}>
-                    
                     <span className="rank">{props.rank}</span>
                     <span className="suit">{props.suit}</span>
-
                 </div>
             );
         }
@@ -74,17 +72,27 @@
             }
         }
         // deal 5 or 7 cards
-        function dealCards(deck, numCards) {
-            let hand = [];
+        function dealCards(numCards) {
             for (let i = 0; i < numCards; i++) {
-                hand.push(deck.pop());
+                userDeck.push(randomCard());
             }
-            return hand;
+            return userDeck;
         }
         // reset cards
+        function resetCards() {
+            userDeck = [];
+            tossCard = [];
+        }
         // toss card
+        function tossCard() {
+
+            let card = userDeck.pop();
+            tossCard.push(card);
+            return card;
+        }
         // shuffle cards
-        function shuffleDeck(deck) {
+        function shuffleDeck() {
+            let deck = userDeck;
             for (let i = deck.length - 1; i > 0; i--) {
                 const j = Math.floor(Math.random() * i);
                 const temp = deck[i];
