@@ -16,6 +16,8 @@
         
         const suits = ['♥', '♦', '♣', '♠'];
         const ranks = ['A','2','3','4','5','6','7','8','9','10','J','Q','K'];
+        var userDeck = [];
+        var tossCard = []; 
 
         // generate deck of cards
         function generateDeck() {
@@ -30,22 +32,67 @@
         // component to display a single card
         function Card(props) {
             return (
-                <div className="card">
-                    <div className="card-inner">
-                        <div className="card-front">
-                            <span className="rank">{props.rank}</span>
-                            <span className="suit">{props.suit}</span>
-                        </div>
-                        <div className="card-back"></div>
-                    </div>
+                <div className="card" onClick={handleClick}>
+                    
+                    <span className="rank">{props.rank}</span>
+                    <span className="suit">{props.suit}</span>
+
                 </div>
             );
         }
+
+        // component to display a deck of cards
+        // function Deck(props) {
+        //     return (
+        //         <div className="deck">
+        //             {props.cards.map((card, index) => (
+        //                 <Card key={index} suit={card.suit} rank={card.rank} />
+        //             ))}
+        //         </div>
+        //     );
+        // }
         // card onclick event to select and swap cards
+        function handleClick(e) {
+            console.log(e.target);
+        }
+        //randomized card 
+        function randomCard() {
+            let randomSuit = suits[Math.floor(Math.random() * suits.length)];
+            let randomRank = ranks[Math.floor(Math.random() * ranks.length)];
+            for (let i = 0; i < userDeck.length; i++) {
+                if (userDeck[i].suit === randomSuit && userDeck[i].rank === randomRank) {
+                        randomCard();
+                }else{
+                    for (let i = 0; i < tossCard.length; i++) {
+                        if (tossCard[i].suit === randomSuit && tossCard[i].rank === randomRank) {
+                            randomCard();
+                        }else{
+                            return {suit: randomSuit, rank: randomRank};
+                        }
+                    }
+                }
+            }
+        }
         // deal 5 or 7 cards
+        function dealCards(deck, numCards) {
+            let hand = [];
+            for (let i = 0; i < numCards; i++) {
+                hand.push(deck.pop());
+            }
+            return hand;
+        }
         // reset cards
         // toss card
         // shuffle cards
+        function shuffleDeck(deck) {
+            for (let i = deck.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * i);
+                const temp = deck[i];
+                deck[i] = deck[j];
+                deck[j] = temp;
+            }
+            return deck;
+        }
         // wildcard 
 
         const container = document.getElementById('root');
