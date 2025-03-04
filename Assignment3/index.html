@@ -14,7 +14,7 @@
 
     <script type="text/babel">
         const { useState, useEffect, useRef } = React;
-        
+
         const suits = ['♥', '♦', '♣', '♠'];
         const ranks = ['A','2','3','4','5','6','7','8','9','10','J','Q','K'];
 
@@ -28,19 +28,19 @@
             }
             return deck;
         }
+
         // component to display a single card
-        function Card({card, onClick}) {
+        function Card({ card, onClick }) {
             return (
-                //() => handleClick(card)
                 <div className="card" onClick={onClick}>
                     <span className="rank">{card.rank}</span>
                     <span className="suit">{card.suit}</span>
                 </div>
             );
         }
+
         // shuffle cards
         function shuffleDeck(deck) {
-            //let deck = userDeck;
             for (let i = deck.length - 1; i > 0; i--) {
                 const j = Math.floor(Math.random() * (i + 1));
                 [deck[i], deck[j]] = [deck[j], deck[i]];
@@ -48,21 +48,15 @@
             return deck;
         }
 
-        // component to display a deck of cards
-        // function Deck(props) {
-        //     return (
-        //         <div className="deck">
-        //             {props.cards.map((card, index) => (
-        //                 <Card key={index} suit={card.suit} rank={card.rank} />
-        //             ))}
-        //         </div>
-        //     );
-        // }
         // card onclick event to select and swap cards
         function App() {
             const [userDeck, setUserDeck] = useState([]);
-            const [tossedCard, settossedCard] = useState([]);
-            const deck = useRef(generateDeck());
+            const [tossedCard, setTossedCard] = useState([]);
+            const deckRef = useRef(generateDeck());
+
+            // useEffect(() => {
+            //     setUserDeck(deckRef.current.slice(0, 5)); // Deal 5 cards initially
+            // }, []);
 
             function handleClick(card) {
                 setUserDeck(prevDeck => {
@@ -86,6 +80,7 @@
                     return newDeck;
                 });
             }
+
             //randomized card 
             function randomCard() {
                 let randomSuit, randomRank, card;
@@ -97,28 +92,33 @@
                          tossedCard.some(c => c.suit === card.suit && c.rank === card.rank));
                 return card;
             }
+
             // deal 5 or 7 cards
             function dealCards(numCards) {
-            for (let i = 0; i < numCards; i++) {
-                let card = randomCard();
-                setUserDeck(prevDeck => [...prevDeck, card]);  
+                const newCards = [];
+                for (let i = 0; i < numCards; i++) {
+                    let card = randomCard();
+                    newCards.push(card);
+                }
+                setUserDeck(prevDeck => [...prevDeck, ...newCards]);
             }
-        }
+
             // reset cards
             function resetCards() {
                 setUserDeck([]);
-                settossedCard([]);
+                setTossedCard([]);
             }
+
             // toss card
             function tossCard() {
                 setUserDeck(prevDeck => {
                     const newDeck = prevDeck.filter(card => card.type !== 'selected');
                     const tossedCards = prevDeck.filter(card => card.type === 'selected');
-                    settossedCard(prevToss => [...prevToss, ...tossedCards]);
+                    setTossedCard(prevToss => [...prevToss, ...tossedCards]);
                     return newDeck;
                 });
             }
-            
+
             // wildcard 
             function wildCard() {
                 const randomSuit = suits[Math.floor(Math.random() * suits.length)];
@@ -126,13 +126,12 @@
                 const card = {suit: randomSuit, rank: randomRank, type: 'wild'};
                 setUserDeck(prevDeck => [...prevDeck, card]);
             }
-            
-            
+
             return (
                 <div className="app">
                     <h1>Deck of Cards</h1>
-                    <div className="deck" onClick={() => dealCards(1)}>  
-                        {deck.length === 0 ? 'No cards remaining' : 'Deck of Cards'}
+                    <div className="deck">
+                        {userDeck.length === 0 ? 'No cards remaining' : 'Deck of Cards'}
                     </div>
 
                     <div className="controls">
@@ -148,10 +147,8 @@
                         {userDeck.map((card, index) => (
                             <Card
                                 key={index}
-                                suit={card.suit}
-                                value={card.value}
+                                card={card}
                                 onClick={() => handleClick(card)}
-                                type={card.type}
                             />
                         ))}
                     </div>
@@ -159,11 +156,9 @@
             );
         }
 
-
         const container = document.getElementById('root');
         const root = ReactDOM.createRoot(container);
-        root.render( <App /> );
+        root.render(<App />);
     </script>
-    
 </body>
 </html>
