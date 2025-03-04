@@ -62,7 +62,7 @@
         function App() {
             const [userDeck, setUserDeck] = useState([]);
             const [tossedCard, settossedCard] = useState([]);
-            const deckRef = useRef(generateDeck());
+            const deck = useRef(generateDeck());
 
             function handleClick(card) {
                 setUserDeck(prevDeck => {
@@ -129,14 +129,32 @@
             
             
             return (
-                <div>
-                    <Deck cards={userDeck} onCardClick={handleClick} />
-                    <button onClick={() => dealCards(5)}>Deal 5 Cards</button>
-                    <button onClick={() => dealCards(7)}>Deal 7 Cards</button>
-                    <button onClick={resetCards}>Reset Cards</button>
-                    <button onClick={tossCard}>Toss Selected Cards</button>
-                    <button onClick={() => setUserDeck(shuffleDeck([...userDeck]))}>Shuffle Deck</button>
-                    <button onClick={wildCard}>Add Wild Card</button>
+                <div className="app">
+                    <h1>Deck of Cards</h1>
+                    <div className="deck" onClick={() => dealCards(1)}>  
+                        {deck.length === 0 ? 'No cards remaining' : 'Deck of Cards'}
+                    </div>
+
+                    <div className="controls">
+                        <button onClick={() => dealCards(5)}>Deal 5</button>
+                        <button onClick={() => dealCards(7)}>Deal 7</button>
+                        <button onClick={resetCards}>Reset</button>
+                        <button onClick={tossCard}>Toss</button>
+                        <button onClick={wildCard}>Wildcard</button>
+                        <button onClick={shuffleDeck}>Regroup</button>
+                    </div>
+
+                    <div className="card-list">
+                        {selectedCards.map((card, index) => (
+                            <Card
+                                key={index}
+                                suit={card.suit}
+                                value={card.value}
+                                onClick={() => handleClick(card)}
+                                isPicked={card === pickedCard}
+                            />
+                        ))}
+                    </div>
                 </div>
             );
         }
