@@ -17,7 +17,7 @@
         const suits = ['♥', '♦', '♣', '♠'];
         const ranks = ['A','2','3','4','5','6','7','8','9','10','J','Q','K'];
         var userDeck = [];
-        var tossCard = []; 
+        var tossedCard = []; 
 
         // generate deck of cards
         function generateDeck() {
@@ -32,11 +32,20 @@
         // component to display a single card
         function Card({card, onClick}) {
             return (
-                <div className="card" onClick={() => onClick(card)}>
+                <div className="card" onClick={() => handleClick(card)}>
                     <span className="rank">{card.rank}</span>
                     <span className="suit">{card.suit}</span>
                 </div>
             );
+        }
+        // shuffle cards
+        function shuffleDeck() {
+            let deck = userDeck;
+            for (let i = deck.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * i);
+                [deck[i], deck[j]] = [deck[j], deck[i]];
+            }
+            return deck;
         }
 
         // component to display a deck of cards
@@ -50,79 +59,87 @@
         //     );
         // }
         // card onclick event to select and swap cards
-        function handleClick(props) {
-            if (props.type === 'selected') {//deselect card
-                props.type = null;
-            }else{
-                for (let i = 0; i < userDeck.length; i++) {
-                    if (userDeck[i].type === 'selected') {//swap cards
-                        let temp = userDeck[i];
-                        userDeck[i] = props;
-                        props = temp;
-                        console.log(userDeck[i]);
-                    }else props.type = 'selected';//select card
-                }
-            }
-        }
-        //randomized card 
-        function randomCard() {
-            let randomSuit = suits[Math.floor(Math.random() * suits.length)];
-            let randomRank = ranks[Math.floor(Math.random() * ranks.length)];
-            for (let i = 0; i < userDeck.length; i++) {
-                if (userDeck[i].suit === randomSuit && userDeck[i].rank === randomRank) {
-                        randomCard();
-                }else{
-                    for (let i = 0; i < tossCard.length; i++) {
-                        if (tossCard[i].suit === randomSuit && tossCard[i].rank === randomRank) {
-                            randomCard();
-                        }else{
-                            return {suit: randomSuit, rank: randomRank};
-                        }
-                    }
-                }
-            }
-        }
-        // deal 5 or 7 cards
-        function dealCards(numCards) {
-            for (let i = 0; i < numCards; i++) {
-                userDeck.push(randomCard());
-            }
-            return userDeck;
-        }
-        // reset cards
-        function resetCards() {
-            userDeck = [];
-            tossCard = [];
-        }
-        // toss card
-        function tossCard() {
-            for (let i = 0; i < userDeck.length; i++) {
-                if (userDeck[i].type === 'selected') {//swap cards
-                    tossCard.push(userDeck[i]);
-                    userDeck.splice(i, 1);
-                }
-            }
-        }
-        // shuffle cards
-        function shuffleDeck() {
-            let deck = userDeck;
-            for (let i = deck.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * i);
-                const temp = deck[i];
-                deck[i] = deck[j];
-                deck[j] = temp;
-            }
-            return deck;
-        }
-        // wildcard 
-        function wildCard() {
-            let randomSuit = suits[Math.floor(Math.random() * suits.length)];
-            let randomRank = ranks[Math.floor(Math.random() * ranks.length)];
-            let card = {suit: randomSuit, rank: randomRank, type: 'wild'};
-            userDeck.push(card);
-            return card(card);
-        }
+        function App() {
+            const [userDeck, setUserDeck] = useState([]);
+            const [tossedCard, settossedCard] = useState([]);
+            const deckRef = useRef(generateDeck());
 
+            function handleClick(card) {
+                setUserDeck(prevDeck => {
+                    const newDeck = [...prevDeck];
+                    const selectedIndex = newDeck.findIndex(c => c.suit === card.suit && c.rank === card.rank);
+
+                    if (newDeck[selectedIndex].type === 'selected') {
+                        newDeck[selectedIndex].type = null;
+                        return newDeck;
+                    }
+
+                    const swapIndex = newDeck.findIndex(c => c.type === 'selected');
+
+                    if (swapIndex !== -1) {
+                        [newDeck[swapIndex], newDeck[selectedIndex]] = [newDeck[selectedIndex], newDeck[swapIndex]];
+                        newDeck[swapIndex].type = null;
+                    } else {
+                        newDeck[selectedIndex].type = 'selected';
+                    }
+
+                    return newDeck;
+                });
+            }
+            //randomized card 
+            function randomCard() {
+                let randomSuit, randomRank, card;
+                do {
+                    randomSuit = suits[Math.floor(Math.random() * suits.length)];
+                    randomRank = ranks[Math.floor(Math.random() * ranks.length)];
+                    card = { suit: randomSuit, rank: randomRank, type: null };
+                } while (userDeck.some(c => c.suit === card.suit && c.rank === card.rank) ||
+                         tossedCard.some(c => c.suit === card.suit && c.rank === card.rank));
+                return card;
+            }
+            // deal 5 or 7 cards
+            function dealCards(numCards) {
+            for (let i = 0; i < numCards; i++) {
+                let card = randomCard();
+                setUserDeck(prevDeck => [...prevDeck, card]);  
+            }
+        }
+            // reset cards
+            function resetCards() {
+                setUserDeck([]);
+                settossedCard([]);
+            }
+            // toss card
+            function tossCard() {
+                setUserDeck(prevDeck => {
+                    const newDeck = prevDeck.filter(card => card.type !== 'selected');
+                    const tossedCards = prevDeck.filter(card => card.type === 'selected');
+                    settossedCard(prevToss => [...prevToss, ...tossedCards]);
+                    return newDeck;
+                });
+            }
+            
+            // wildcard 
+            function wildCard() {
+                const randomSuit = suits[Math.floor(Math.random() * suits.length)];
+                const randomRank = ranks[Math.floor(Math.random() * ranks.length)];
+                const card = {suit: randomSuit, rank: randomRank, type: 'wild'};
+                setUserDeck(prevDeck => [...prevDeck, card]);
+            }
+            
+            
+            return (
+                <div>
+                    <Deck cards={userDeck} onCardClick={handleClick} />
+                    <button onClick={() => dealCards(5)}>Deal 5 Cards</button>
+                    <button onClick={() => dealCards(7)}>Deal 7 Cards</button>
+                    <button onClick={resetCards}>Reset Cards</button>
+                    <button onClick={tossCard}>Toss Selected Cards</button>
+                    <button onClick={() => setUserDeck(shuffleDeck([...userDeck]))}>Shuffle Deck</button>
+                    <button onClick={wildCard}>Add Wild Card</button>
+                </div>
+            );
+        }
 
 
         const container = document.getElementById('root');
