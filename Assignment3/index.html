@@ -98,6 +98,10 @@
             const [tossedCard, setTossedCard] = useState([]);
             const deckRef = useRef(generateDeck());
 
+            useEffect(() => {
+                deckRef.current = generateDeck();
+                setUserDeck(deckRef.current.slice(0, 1)); // Deal 5 cards initially
+            }, []);
             function handleClick(card) {
                 setUserDeck(prevDeck => {
                     const newDeck = [...prevDeck];
@@ -171,7 +175,7 @@
                     
                     <h1>Deck of Cards</h1>
                     <div className="container">
-                    <div className="deck" onClick={() => dealCards(1)}>  
+                    <div className="deck" onClick={() => dealCards(1)} >  
                         {userDeck.length === 0 ? 'No cards remaining' : 'Deck of Cards'}
                     </div>
                     
