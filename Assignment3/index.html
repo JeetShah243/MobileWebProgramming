@@ -13,11 +13,10 @@
     <div id="root"></div>
 
     <script type="text/babel">
+        const { useState, useEffect, useRef } = React;
         
         const suits = ['♥', '♦', '♣', '♠'];
         const ranks = ['A','2','3','4','5','6','7','8','9','10','J','Q','K'];
-        var userDeck = [];
-        var tossedCard = []; 
 
         // generate deck of cards
         function generateDeck() {
@@ -32,17 +31,18 @@
         // component to display a single card
         function Card({card, onClick}) {
             return (
-                <div className="card" onClick={() => handleClick(card)}>
+                //() => handleClick(card)
+                <div className="card" onClick={onClick}>
                     <span className="rank">{card.rank}</span>
                     <span className="suit">{card.suit}</span>
                 </div>
             );
         }
         // shuffle cards
-        function shuffleDeck() {
-            let deck = userDeck;
+        function shuffleDeck(deck) {
+            //let deck = userDeck;
             for (let i = deck.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * i);
+                const j = Math.floor(Math.random() * (i + 1));
                 [deck[i], deck[j]] = [deck[j], deck[i]];
             }
             return deck;
@@ -141,17 +141,17 @@
                         <button onClick={resetCards}>Reset</button>
                         <button onClick={tossCard}>Toss</button>
                         <button onClick={wildCard}>Wildcard</button>
-                        <button onClick={shuffleDeck}>Regroup</button>
+                        <button onClick={() => setUserDeck(shuffleDeck([...userDeck]))}>Regroup</button>
                     </div>
 
                     <div className="card-list">
-                        {selectedCards.map((card, index) => (
+                        {userDeck.map((card, index) => (
                             <Card
                                 key={index}
                                 suit={card.suit}
                                 value={card.value}
                                 onClick={() => handleClick(card)}
-                                isPicked={card === pickedCard}
+                                type={card.type}
                             />
                         ))}
                     </div>
